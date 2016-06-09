@@ -15,9 +15,75 @@
     -->
     <script>
         var onLoadCallback = function(containerSize, childSize, numberOfChildren) {
-            
+          function randomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+          }
+
+          function getContainer(containerSize) {
+            var container = document.createElement("DIV");
+            container.id = 'container';
+            container.style.height = containerSize + 'px';
+            container.style.width = containerSize + 'px';
+
+            return container;
+          }
+
+          function getChild(childSize) {
+            var child = document.createElement("DIV");
+            child.className = 'child';
+            child.style.height = childSize + 'px';
+            child.style.width = childSize + 'px';
+            child.style.display = 'inline-block';
+            child.style.backgroundColor = randomColor();
+
+            return child;
+          }
+
+          function createContainer(containerSize) {
+            document.body.appendChild(getContainer(containerSize));
+          }
+
+          function createChild(containerSize, childSize, numberOfChildren) {
+            var container = document.getElementById('container');
+            var max = Math.floor(containerSize / childSize);
+            var lines = 0;
+            var childCount = 0;
+            for (var i = 0; i < numberOfChildren && lines < max; i++) {
+              // if we're not too long, append
+              if (i % max !== 0) {
+                container.appendChild(getChild(childSize));
+                childCount++;
+              // else need a linebreak
+              } else {
+                var brDiv = document.createElement("DIV");
+                container.appendChild(brDiv);
+                lines++;
+              }
+            }
+            if (childCount < numberOfChildren) {
+              alert('We drow only '+childCount+' out of '+numberOfChildren);
+            }
+          };
+
+          function bindEvents() {
+            var children = document.getElementsByClassName('child');
+            for (var i = 0; i < children.length; i++) {
+              children[i].addEventListener('mouseover', function(event) {
+                console.log("mouseover target", event.target);
+              })
+            }
+          }
+
+          createContainer(containerSize);
+          createChild(containerSize, childSize, numberOfChildren);
+          bindEvents();
         }
-        document.addEventListener('DOMContentLoaded', function () {   
+        document.addEventListener('DOMContentLoaded', function () {
             onLoadCallback(200, 50, 17);
         });
     </script>
